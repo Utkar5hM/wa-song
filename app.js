@@ -57,7 +57,6 @@ app.get('/spotify/status', (req, res) => {
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
         access_token = data.body['access_token'];
-
         console.log('The access token has been refreshed!');
         console.log('access_token:', access_token);
         spotifyApi.setAccessToken(access_token);
@@ -114,7 +113,9 @@ app.get('/bot', async (req, res) => {
    */
   client.on('ready', async () => {
     console.log('Client is ready!');
-    res.send('Client is Ready <a href="/spotify/login">go back to login</a>');
+    if (!res.type) res.type('html');
+    res.write('Client is Ready <a href="/spotify/login">go back to login</a>');
+    res.send;
     setInterval(() => {
       console.log('requesting for currently playing track');
       spotifyApi
@@ -136,9 +137,8 @@ app.get('/bot', async (req, res) => {
             console.log('probably not listening to any song.');
           }
         });
-    }, 30000);
+    }, 10000);
   });
-
   client.initialize();
 });
 app.get('/qr', (req, res) => {
