@@ -144,7 +144,7 @@ app.get('/bot', async (req, res) => {
             minute: 'numeric',
             hour12: true,
           });
-          if (data.body) {
+          if (data.body && data.body.item) {
             let { name } = data.body.item;
             let artist = data.body.item.album.artists[0].name;
             let current_track = `currently listening to ${name} by ${artist} | github.com/utkar5hm/wa-song`;
