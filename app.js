@@ -123,26 +123,50 @@ app.get('/bot', async (req, res) => {
       spotifyApi
         .getMyCurrentPlayingTrack()
         .catch(() => {
-          client.setStatus('Hello there | github.com/utkar5hm/wa-song');
+          let time = new Date();
+          time = time.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          });
+          if (previous_track == 'Hello there | github.com/utkar5hm/wa-song') {
+            client.setStatus(
+              'Hello there | github.com/utkar5hm/wa-song | ' + time
+            );
+            previous_track = 'Hello there | github.com/utkar5hm/wa-song';
+          }
           console.log('failed to fetch');
         })
         .then(function (data) {
+          let time = new Date();
+          time = time.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          });
           if (data.body) {
             let { name } = data.body.item;
             let artist = data.body.item.album.artists[0].name;
             let current_track = `currently listening to ${name} by ${artist} | github.com/utkar5hm/wa-song`;
             if (previous_track != current_track) {
-              client.setStatus(current_track);
+              client.setStatus(current_track + ' ' + time);
               previous_track = current_track;
-              console.log(`currently listening to ${name} by ${artist}`);
+              console.log(
+                `currently listening to ${name} by ${artist} | ` + time
+              );
             }
             console.log('listening to same song');
           } else {
-            client.setStatus('Hello there | github.com/utkar5hm/wa-song');
+            if (previous_track == 'Hello there | github.com/utkar5hm/wa-song') {
+              client.setStatus(
+                'Hello there | github.com/utkar5hm/wa-song | ' + time
+              );
+              previous_track = 'Hello there | github.com/utkar5hm/wa-song';
+            }
             console.log('probably not listening to any song.');
           }
         });
-    }, 10000);
+    }, 20000);
   });
   client.initialize();
 });
