@@ -1,0 +1,25 @@
+{
+  "name": "wa-song",
+  "version": "1.0.0",
+  "description": "update whatsapp status with currently playing song",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Utkar5hM/wa-song.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Utkar5hM/wa-song/issues"
+  },
+  "homepage": "https://github.com/Utkar5hM/wa-song#readme",
+  "dependencies": {
+    "axios": "^0.22.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.14.1"
+  }
+}
