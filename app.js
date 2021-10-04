@@ -10,6 +10,17 @@ const client_id = process.env.CLIENT_ID;
 const scopes = ['user-read-currently-playing'];
 const redirect_uri = 'http://localhost:5000/spotify/status';
 const clientSecret = process.env.CLIENT_SECRET;
+const defaultStatus = 'Hello there';
+const githubUrl = 'github.com/utkar5hm/wa-song';
+
+/**
+ * Create a status separating the prependMessgae and appendMessage by | 
+ */
+const createStatus = (prependMessage, appendMessage)  => {
+  // Create an array, remove the nulls and join by |, allowing to have either no prepend, no append or both
+  return [prependMessage, githubUrl, appendMessage].filter(m => m).join(' | ');
+}
+
 let previous_track = '';
 let SpotifyWebApi = require('spotify-web-api-node');
 let QRCode = '';
@@ -26,9 +37,7 @@ app.get('/spotify/login', (req, res) => {
 });
 
 app.get('/spotify/status', (req, res) => {
-  const error = req.query.error;
-  const code = req.query.code;
-  const state = req.query.state;
+  const { error, code, state } = req.query;
 
   if (error) {
     console.error('Callback Error:', error);
@@ -89,14 +98,18 @@ app.get('/bot', async (req, res) => {
   });
 
   client.on('message', (msg) => {
-    if (msg.body == '!hi') {
-      msg.reply(
-        `hi ;_; ${msg.author}, this is a bot. check more about me on https://github.com/utkar5hm/wa-song`
-      );
-    } else if (msg.body == '!joke') {
-      giveMeAJoke.getRandomDadJoke(function (joke) {
-        msg.reply(joke);
-      });
+    switch(msg.body)
+    {
+      case '!hi':
+        msg.reply(
+          `hi ;_; ${msg.author}, this is a bot. check more about me on ${githubUrl}`
+        );
+        break;
+      case '!joke':
+        giveMeAJoke.getRandomDadJoke(function (joke) {
+          msg.reply(joke);
+        });
+        break;
     }
   });
 
@@ -129,11 +142,11 @@ app.get('/bot', async (req, res) => {
             minute: 'numeric',
             hour12: true,
           });
-          if (previous_track == 'Hello there | github.com/utkar5hm/wa-song') {
+          if (previous_track == createStatus(defaultStatus)) {
             client.setStatus(
-              'Hello there | github.com/utkar5hm/wa-song | ' + time
+              createStatus(defaultStatus, time)
             );
-            previous_track = 'Hello there | github.com/utkar5hm/wa-song';
+            previous_track = createStatus(defaultStatus);
           }
           console.log('failed to fetch');
         })
@@ -147,7 +160,7 @@ app.get('/bot', async (req, res) => {
           if (data.body && data.body.item) {
             let { name } = data.body.item;
             let artist = data.body.item.album.artists[0].name;
-            let current_track = `currently listening to ${name} by ${artist} | github.com/utkar5hm/wa-song`;
+            let current_track = 'currently listening to ' + createStatus(`${name} by ${artist}`);
             if (previous_track != current_track) {
               client.setStatus(current_track + ' ' + time);
               previous_track = current_track;
@@ -157,11 +170,11 @@ app.get('/bot', async (req, res) => {
             }
             console.log('listening to same song');
           } else {
-            if (previous_track == 'Hello there | github.com/utkar5hm/wa-song') {
+            if (previous_track == createStatus(defaultStatus)) {
               client.setStatus(
-                'Hello there | github.com/utkar5hm/wa-song | ' + time
+                createStatus(defaultStatus, time)
               );
-              previous_track = 'Hello there | github.com/utkar5hm/wa-song';
+              previous_track = createStatus(defaultStatus);
             }
             console.log('probably not listening to any song.');
           }
