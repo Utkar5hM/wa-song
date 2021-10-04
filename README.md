@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to  wa-song👋</h1>
 
-> update whatsapp status with currently playing song on spotify. Easy to use.
+>bot which updates whatsapp status with currently playing song on spotify.
 
 ##  Local Development Environment Setup
 
@@ -33,7 +33,7 @@ Give a ⭐️ if this project helped you!
 
 ## 📚 Documentation
 
-you need to register spotify app where you also need to setup redirect url to http://localhost:5000/spotify/status and get CLIENT_ID and CLIENT_SECRET which can be placed in .env folder, the server can be started with command given above after which u can need to access http://localhost:5000/spotify/login  where you have to signin using spotify after which scan qr code for whatsapp-web. after which the code automatically udaptes your whatsapp about with the currently playing song. feel free to contribute to the project. 
+you need to register spotify app where you also need to setup redirect url to http://localhost:5000/spotify/status and later setup CLIENT_ID and CLIENT_SECRET in .env folder, the server can be started with command given above after which u can need to access http://localhost:5000/spotify/login  where you have to signin using spotify after which scan qr code for whatsapp-web. after which the code automatically udaptes your whatsapp about with the currently playing song. feel free to contribute to the project. 
 
 commands !hi and !joke have been added for fun. ask your friends to send you a message while the bot is turned on.
 
