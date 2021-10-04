@@ -5,17 +5,17 @@ const app = express();
 const qr = require('qr-image');
 const fs = require('fs');
 const { Client } = require('whatsapp-web.js');
-var giveMeAJoke = require('give-me-a-joke');
+let giveMeAJoke = require('give-me-a-joke');
 const client_id = process.env.CLIENT_ID;
 const scopes = ['user-read-currently-playing'];
 const redirect_uri = 'http://localhost:5000/spotify/status';
 const clientSecret = process.env.CLIENT_SECRET;
-
-var SpotifyWebApi = require('spotify-web-api-node');
+let previous_track = '';
+let SpotifyWebApi = require('spotify-web-api-node');
 let QRCode = '';
 let access_token = '';
 // credentials are optional
-var spotifyApi = new SpotifyWebApi({
+let spotifyApi = new SpotifyWebApi({
   clientId: client_id,
   clientSecret: clientSecret,
   redirectUri: redirect_uri,
@@ -114,7 +114,9 @@ app.get('/bot', async (req, res) => {
   client.on('ready', async () => {
     console.log('Client is ready!');
     if (!res.type) res.type('html');
-    res.write('Client is Ready <a href="/spotify/login">go back to login</a>');
+    res.write(
+      '<p>Client is Ready <a href="/spotify/login">go back to login</a></p>'
+    );
     res.send;
     setInterval(() => {
       console.log('requesting for currently playing track');
@@ -128,10 +130,13 @@ app.get('/bot', async (req, res) => {
           if (data.body) {
             let { name } = data.body.item;
             let artist = data.body.item.album.artists[0].name;
-            client.setStatus(
-              `currently listening to ${name} by ${artist} | github.com/utkar5hm/wa-song`
-            );
-            console.log(`currently listening to ${name} by ${artist}`);
+            let current_track = `currently listening to ${name} by ${artist} | github.com/utkar5hm/wa-song`;
+            if (previous_track != current_track) {
+              client.setStatus(current_track);
+              previous_track = current_track;
+              console.log(`currently listening to ${name} by ${artist}`);
+            }
+            console.log('listening to same song');
           } else {
             client.setStatus('Hello there | github.com/utkar5hm/wa-song');
             console.log('probably not listening to any song.');
